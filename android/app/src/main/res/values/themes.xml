@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.PyOnPhone" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/ios_system_blue</item>
+        <item name="colorOnPrimary">#ffffff</item>
+        <item name="colorPrimaryContainer">@color/ios_system_blue</item>
+        <item name="colorOnPrimaryContainer">#ffffff</item>
+
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/ios_system_blue</item>
+        <item name="colorOnSecondary">#ffffff</item>
+        <item name="colorSecondaryContainer">@color/ios_tertiary_background</item>
+        <item name="colorOnSecondaryContainer">@color/ios_label</item>
+
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/ios_background</item>
+        <item name="colorOnSurface">@color/ios_label</item>
+        <item name="colorSurfaceVariant">@color/ios_secondary_background</item>
+        <item name="colorOnSurfaceVariant">@color/ios_secondary_label</item>
+
+        <!-- Background -->
+        <item name="android:colorBackground">@color/ios_background</item>
+        <item name="colorOnBackground">@color/ios_label</item>
+
+        <!-- Error -->
+        <item name="colorError">@color/ios_system_red</item>
+        <item name="colorOnError">#ffffff</item>
+
+        <!-- System bars -->
+        <item name="android:statusBarColor">@color/ios_background</item>
+        <item name="android:navigationBarColor">@color/ios_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Text appearance -->
+        <item name="android:textColorPrimary">@color/ios_label</item>
+        <item name="android:textColorSecondary">@color/ios_secondary_label</item>
+        <item name="android:textColorTertiary">@color/ios_tertiary_label</item>
+
+        <!-- Button style -->
+        <item name="materialButtonStyle">@style/iOSButton</item>
+        <item name="materialCardViewStyle">@style/iOSCard</item>
+    </style>
+
+    <!-- iOS-style button -->
+    <style name="iOSButton" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/ios_system_blue</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="cornerRadius">10dp</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
+    <!-- iOS-style card -->
+    <style name="iOSCard" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/ios_secondary_background</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <!-- iOS-style text input -->
+    <style name="iOSTextField" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <item name="boxBackgroundColor">@color/ios_tertiary_background</item>
+        <item name="boxCornerRadiusTopStart">10dp</item>
+        <item name="boxCornerRadiusTopEnd">10dp</item>
+        <item name="boxCornerRadiusBottomStart">10dp</item>
+        <item name="boxCornerRadiusBottomEnd">10dp</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="hintTextColor">@color/ios_system_blue</item>
+        <item name="android:textColorHint">@color/ios_quaternary_label</item>
+    </style>
+
+    <!-- iOS-style toolbar -->
+    <style name="iOSToolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/ios_secondary_background</item>
+        <item name="titleTextColor">@color/ios_label</item>
+        <item name="navigationIconTint">@color/ios_system_blue</item>
+    </style>
+
+    <!-- iOS-style bottom navigation indicator -->
+    <style name="iOSBottomNavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/ios_system_blue</item>
+        <item name="shapeAppearance">@style/iOSBottomNavIndicatorShape</item>
+    </style>
+
+    <style name="iOSBottomNavIndicatorShape" parent="ShapeAppearance.Material3.Corner.Full">
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <!-- iOS-style FAB shape -->
+    <style name="iOSFabShape" parent="">
+        <item name="cornerSize">14dp</item>
+    </style>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PyOnPhone</string>
+    <string name="nav_projects">项目</string>
+    <string name="nav_editor">编辑</string>
+    <string name="nav_git">Git</string>
+    <string name="nav_settings">设置</string>
+    <string name="projects_placeholder">项目列表</string>
+    <string name="editor_placeholder">编辑器</string>
+    <string name="git_placeholder">Git 管理</string>
+    <string name="settings_placeholder">设置</string>
+</resources>

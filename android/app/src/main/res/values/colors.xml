@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#1a73e8</color>
+
+    <!-- iOS Dark Mode Colors -->
+    <color name="ios_background">#000000</color>
+    <color name="ios_secondary_background">#1c1c1e</color>
+    <color name="ios_tertiary_background">#2c2c2e</color>
+    <color name="ios_quaternary_background">#3a3a3c</color>
+
+    <color name="ios_label">#ffffff</color>
+    <color name="ios_secondary_label">#ebebf5</color>
+    <color name="ios_tertiary_label">#ebebf599</color>
+    <color name="ios_quaternary_label">#ebebf54d</color>
+
+    <color name="ios_separator">#54545899</color>
+    <color name="ios_opaque_separator">#38383a</color>
+
+    <color name="ios_system_blue">#0a84ff</color>
+    <color name="ios_system_green">#30d158</color>
+    <color name="ios_system_red">#ff453a</color>
+    <color name="ios_system_orange">#ff9f0a</color>
+    <color name="ios_system_yellow">#ffd60a</color>
+    <color name="ios_system_purple">#bf5af2</color>
+    <color name="ios_system_teal">#64d2ff</color>
+
+    <color name="ios_system_fill">#7878805b</color>
+    <color name="ios_secondary_system_fill">#78788052</color>
+    <color name="ios_tertiary_system_fill">#7676803d</color>
+    <color name="ios_quaternary_system_fill">#7474802e</color>
+
+    <!-- Material overrides for iOS look -->
+    <color name="colorPrimary">@color/ios_system_blue</color>
+    <color name="colorPrimaryDark">@color/ios_background</color>
+    <color name="colorAccent">@color/ios_system_blue</color>
+    <color name="colorSurface">@color/ios_secondary_background</color>
+    <color name="colorOnSurface">@color/ios_label</color>
+</resources>

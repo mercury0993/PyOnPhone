@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; }
+#container { width:100%; height:100%; }
+</style>
+</head>
+<body>
+<div id="container"></div>
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+<script>
+var editor;
+require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' }});
+require(['vs/editor/editor.main'], function() {
+    // Define custom theme
+    monaco.editor.defineTheme('pyonphone-dark', {
+        base: 'vs-dark',
+        inherit: true,
+        rules: [
+            { token: 'comment', foreground: '6A9955', fontStyle: 'italic' },
+            { token: 'keyword', foreground: '569CD6' },
+            { token: 'string', foreground: 'CE9178' },
+            { token: 'number', foreground: 'B5CEA8' },
+            { token: 'type', foreground: '4EC9B0' },
+            { token: 'function', foreground: 'DCDCAA' },
+            { token: 'variable', foreground: '9CDCFE' }
+        ],
+        colors: {
+            'editor.background': '#1e1e1e',
+            'editor.foreground': '#d4d4d4',
+            'editor.lineHighlightBackground': '#2a2a2a',
+            'editor.selectionBackground': '#264f78',
+            'editor.inactiveSelectionBackground': '#3a3d41'
+        }
+    });
+
+    editor = monaco.editor.create(document.getElementById('container'), {
+        value: '',
+        language: 'python',
+        theme: 'pyonphone-dark',
+        automaticLayout: true,
+        minimap: { enabled: false },
+        fontSize: 14,
+        lineHeight: 20,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        wordWrap: 'on',
+        tabSize: 4,
+        insertSpaces: true,
+        bracketPairColorization: { enabled: true },
+        guides: {
+            bracketPairs: true,
+            indentation: true
+        },
+        smoothScrolling: true,
+        cursorBlinking: 'smooth',
+        cursorSmoothCaretAnimation: 'on',
+        renderWhitespace: 'selection',
+        suggestOnTriggerCharacters: true,
+        quickSuggestions: true,
+        parameterHints: { enabled: true },
+        // Code folding
+        folding: true,
+        foldingHighlight: true,
+        foldingStrategy: 'auto',
+        showFoldingControls: 'always',
+        // Multi-cursor
+        multiCursorModifier: 'ctrlCmd',
+        multiCursorMergeOverlapping: true,
+        // Column selection
+        columnSelection: false,
+        // Performance optimizations for large files
+        largeFileOptimizations: true,
+        wordWrapOverride1: 'off',
+        maxTokenizationLineLength: 10000,
+        // Additional features
+        links: true,
+        colorDecorators: true,
+        contextmenu: true,
+        mouseWheelZoom: true,
+        // Snippet suggestions
+        snippetSuggestions: 'inline',
+        // Word highlight
+        occurrencesHighlight: 'singleFile',
+        selectionHighlight: true
+    });
+
+    editor.onDidChangeModelContent(function() {
+        if (window.Android) {
+            window.Android.onContentChanged(editor.getValue());
+        }
+    });
+
+    // Workaround: ensure Monaco's textarea gets focus on touch (Android WebView)
+    document.getElementById('container').addEventListener('touchend', function() {
+        setTimeout(function() { editor.focus(); }, 100);
+    });
+
+    // Add keyboard shortcuts
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, function() {
+        // Save is handled by auto-save, but we can trigger immediate save
+        if (window.Android) {
+            window.Android.onContentChanged(editor.getValue());
+        }
+    });
+
+    // Notify Android that editor is ready
+    if (window.Android) {
+        window.Android.onEditorReady();
+    }
+});
+
+function setContent(text) {
+    if (editor) {
+        editor.setValue(text);
+        // Move cursor to beginning
+        editor.setPosition({ lineNumber: 1, column: 1 });
+    }
+}
+
+function getContent() {
+    return editor ? editor.getValue() : '';
+}
+
+function setLanguage(lang) {
+    if (editor) {
+        monaco.editor.setModelLanguage(editor.getModel(), lang);
+    }
+}
+
+function setTheme(theme) {
+    if (editor) {
+        monaco.editor.setTheme(theme === 'dark' ? 'pyonphone-dark' : 'vs');
+    }
+}
+
+function getLineCount() {
+    return editor ? editor.getModel().getLineCount() : 0;
+}
+
+function getCurrentLine() {
+    return editor ? editor.getPosition().lineNumber : 0;
+}
+
+function goToLine(line) {
+    if (editor) {
+        editor.revealLine(line);
+        editor.setPosition({ lineNumber: line, column: 1 });
+    }
+}
+
+function findText(text) {
+    if (editor) {
+        editor.getAction('actions.find').run();
+    }
+}
+
+function replaceText(findText, replaceText) {
+    if (editor) {
+        editor.getAction('editor.action.startFindReplaceAction').run();
+    }
+}
+
+function getSelectedText() {
+    if (editor) {
+        var selection = editor.getSelection();
+        return editor.getModel().getValueInRange(selection);
+    }
+    return '';
+}
+
+function insertText(text) {
+    if (editor) {
+        var selection = editor.getSelection();
+        editor.executeEdits('insert', [{
+            range: selection,
+            text: text,
+            forceMoveMarkers: true
+        }]);
+    }
+}
+
+function formatDocument() {
+    if (editor) {
+        editor.getAction('editor.action.formatDocument').run();
+    }
+}
+
+function toggleComment() {
+    if (editor) {
+        editor.getAction('editor.action.commentLine').run();
+    }
+}
+
+// Code folding
+function foldAll() {
+    if (editor) {
+        editor.getAction('editor.foldAll').run();
+    }
+}
+
+function unfoldAll() {
+    if (editor) {
+        editor.getAction('editor.unfoldAll').run();
+    }
+}
+
+function foldLevel(level) {
+    if (editor) {
+        editor.getAction('editor.foldLevel' + level).run();
+    }
+}
+
+// Multi-cursor
+function addCursorAbove() {
+    if (editor) {
+        editor.addAction({
+            id: 'add-cursor-above',
+            label: 'Add Cursor Above',
+            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Alt | monaco.KeyCode.UpArrow],
+            run: function() {
+                editor.trigger('keyboard', 'editor.action.insertCursorAbove');
+            }
+        });
+        editor.trigger('keyboard', 'editor.action.insertCursorAbove');
+    }
+}
+
+function addCursorBelow() {
+    if (editor) {
+        editor.addAction({
+            id: 'add-cursor-below',
+            label: 'Add Cursor Below',
+            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Alt | monaco.KeyCode.DownArrow],
+            run: function() {
+                editor.trigger('keyboard', 'editor.action.insertCursorBelow');
+            }
+        });
+        editor.trigger('keyboard', 'editor.action.insertCursorBelow');
+    }
+}
+
+function selectNextOccurrence() {
+    if (editor) {
+        editor.getAction('editor.action.addSelectionToNextFindMatch').run();
+    }
+}
+
+function selectAllOccurrences() {
+    if (editor) {
+        editor.getAction('editor.action.selectHighlights').run();
+    }
+}
+
+// Column selection
+function toggleColumnSelection() {
+    if (editor) {
+        editor.trigger('keyboard', 'editor.action.columnSelect');
+    }
+}
+
+// Line operations
+function duplicateLine() {
+    if (editor) {
+        editor.getAction('editor.action.copyLinesDownAction').run();
+    }
+}
+
+function deleteLine() {
+    if (editor) {
+        editor.getAction('editor.action.deleteLines').run();
+    }
+}
+
+function moveLineUp() {
+    if (editor) {
+        editor.getAction('editor.action.moveLinesUpAction').run();
+    }
+}
+
+function moveLineDown() {
+    if (editor) {
+        editor.getAction('editor.action.moveLinesDownAction').run();
+    }
+}
+
+// Indentation
+function indentLine() {
+    if (editor) {
+        editor.getAction('editor.action.indentLines').run();
+    }
+}
+
+function outdentLine() {
+    if (editor) {
+        editor.getAction('editor.action.outdentLines').run();
+    }
+}
+
+// Transform
+function toUpperCase() {
+    if (editor) {
+        var selection = editor.getSelection();
+        var text = editor.getModel().getValueInRange(selection);
+        editor.executeEdits('uppercase', [{
+            range: selection,
+            text: text.toUpperCase(),
+            forceMoveMarkers: true
+        }]);
+    }
+}
+
+function toLowerCase() {
+    if (editor) {
+        var selection = editor.getSelection();
+        var text = editor.getModel().getValueInRange(selection);
+        editor.executeEdits('lowercase', [{
+            range: selection,
+            text: text.toLowerCase(),
+            forceMoveMarkers: true
+        }]);
+    }
+}
+
+// Sort lines
+function sortLinesAscending() {
+    if (editor) {
+        editor.getAction('editor.action.sortLinesAscending').run();
+    }
+}
+
+function sortLinesDescending() {
+    if (editor) {
+        editor.getAction('editor.action.sortLinesDescending').run();
+    }
+}
+
+// Trim whitespace
+function trimTrailingWhitespace() {
+    if (editor) {
+        editor.getAction('editor.action.trimTrailingWhitespace').run();
+    }
+}
+
+// Toggle word wrap
+function toggleWordWrap() {
+    if (editor) {
+        var currentWrap = editor.getOption(monaco.editor.EditorOption.wordWrap);
+        editor.updateOptions({
+            wordWrap: currentWrap === 'on' ? 'off' : 'on'
+        });
+    }
+}
+
+// Get cursor position
+function getCursorPosition() {
+    if (editor) {
+        var pos = editor.getPosition();
+        return { line: pos.lineNumber, column: pos.column };
+    }
+    return null;
+}
+
+// Set cursor position
+function setCursorPosition(line, column) {
+    if (editor) {
+        editor.setPosition({ lineNumber: line, column: column });
+        editor.revealLine(line);
+    }
+}
+
+// Get selection
+function getSelection() {
+    if (editor) {
+        var sel = editor.getSelection();
+        return {
+            startLine: sel.startLineNumber,
+            startColumn: sel.startColumn,
+            endLine: sel.endLineNumber,
+            endColumn: sel.endColumn
+        };
+    }
+    return null;
+}
+
+// Select range
+function selectRange(startLine, startColumn, endLine, endColumn) {
+    if (editor) {
+        editor.setSelection({
+            startLineNumber: startLine,
+            startColumn: startColumn,
+            endLineNumber: endLine,
+            endColumn: endColumn
+        });
+        editor.revealLine(startLine);
+    }
+}
+
+// Undo/Redo
+function undo() {
+    if (editor) {
+        editor.trigger('keyboard', 'undo');
+    }
+}
+
+function redo() {
+    if (editor) {
+        editor.trigger('keyboard', 'redo');
+    }
+}
+</script>
+</body>
+</html>

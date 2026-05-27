@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_projects">
+
+    <fragment
+        android:id="@+id/nav_projects"
+        android:name="com.pyonphone.app.ProjectsFragment"
+        android:label="@string/nav_projects" />
+
+    <fragment
+        android:id="@+id/nav_editor"
+        android:name="com.pyonphone.app.EditorFragment"
+        android:label="@string/nav_editor">
+        <argument
+            android:name="project_id"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_git"
+        android:name="com.pyonphone.app.GitFragment"
+        android:label="@string/nav_git" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.pyonphone.app.SettingsFragment"
+        android:label="@string/nav_settings" />
+
+    <!-- Navigation animations -->
+    <action
+        android:id="@+id/action_projects_to_editor"
+        app:destination="@id/nav_editor"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_projects_to_git"
+        app:destination="@id/nav_git"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_projects_to_settings"
+        app:destination="@id/nav_settings"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+</navigation>

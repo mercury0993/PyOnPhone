@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="查找内容"
+        style="@style/iOSTextField">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_find"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColor="@color/ios_label"
+            android:textColorHint="@color/ios_quaternary_label" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="替换为"
+        style="@style/iOSTextField">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_replace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColor="@color/ios_label"
+            android:textColorHint="@color/ios_quaternary_label" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

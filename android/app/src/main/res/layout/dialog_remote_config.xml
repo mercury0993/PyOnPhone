@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="输入远程仓库地址（如 GitHub、GitLab）"
+        android:textColor="@color/ios_secondary_label"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="远程仓库 URL"
+        style="@style/iOSTextField">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_remote_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textUri"
+            android:textColor="@color/ios_label"
+            android:textColorHint="@color/ios_quaternary_label" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="示例:\n• https://github.com/user/repo.git\n• git@github.com:user/repo.git\n• https://gitlab.com/user/repo.git"
+        android:textColor="@color/ios_tertiary_label"
+        android:textSize="12sp"
+        android:layout_marginTop="12dp" />
+
+</LinearLayout>

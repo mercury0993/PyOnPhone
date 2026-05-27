@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ios_background"
+    android:orientation="vertical">
+
+    <!-- Header: branch + status -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ios_secondary_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp">
+
+        <TextView
+            android:id="@+id/txt_branch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="分支: --"
+            android:textColor="@color/ios_label"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_changes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 个变更"
+            android:textColor="@color/ios_system_orange"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txt_git_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="远程"
+            android:textColor="@color/ios_system_green"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btn_git_mode"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="切换模式"
+            android:src="@android:drawable/ic_menu_rotate"
+            android:tint="@color/ios_system_blue" />
+    </LinearLayout>
+
+    <!-- Remote URL -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ios_tertiary_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="远程: "
+            android:textColor="@color/ios_secondary_label"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txt_remote_url"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:text="未配置远程仓库"
+            android:textColor="@color/ios_system_blue"
+            android:textSize="12sp" />
+
+        <ImageButton
+            android:id="@+id/btn_config_remote"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="配置远程仓库"
+            android:src="@android:drawable/ic_menu_manage"
+            android:tint="@color/ios_system_blue" />
+    </LinearLayout>
+
+    <!-- Action buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_commit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="提交"
+            style="@style/Widget.Material3.Button.TonalButton" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_push"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="1"
+            android:text="推送"
+            style="@style/Widget.Material3.Button.TonalButton" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_pull"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="拉取"
+            style="@style/Widget.Material3.Button.TonalButton" />
+    </LinearLayout>
+
+    <!-- Changed files -->
+    <TextView
+        android:id="@+id/txt_changed_files"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ios_tertiary_background"
+        android:padding="16dp"
+        android:textColor="@color/ios_secondary_label"
+        android:textSize="13sp"
+        android:fontFamily="monospace"
+        android:visibility="gone" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/ios_separator" />
+
+    <!-- Commit log header -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ios_secondary_background"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:text="提交历史"
+        android:textColor="@color/ios_secondary_label"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <!-- Commit log list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commit_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/ios_background" />
+
+</LinearLayout>

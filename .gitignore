@@ -1,0 +1,31 @@
+# Server runtime data
+server/projects/
+server/test_projects/
+server/__pycache__/
+*.pyc
+
+# Android build outputs
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+*.apk
+
+# Claude Code
+.claude/
+
+# Environment / secrets
+.env
+*.key
+*.pem
+id_rsa*
+id_ed25519*
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

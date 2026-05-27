@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ios_background"
+    android:orientation="vertical">
+
+    <!-- File tree sidebar (hidden by default) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/file_tree"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/ios_secondary_background"
+            android:visibility="gone" />
+
+        <!-- Editor + Terminal split -->
+        <FrameLayout
+            android:id="@+id/editor_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- Monaco Editor WebView -->
+                <WebView
+                    android:id="@+id/editor_webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <!-- Resizable divider (24dp touch target, 2dp visual line) -->
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:background="@color/ios_separator"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp" />
+
+                <!-- Terminal WebView -->
+                <WebView
+                    android:id="@+id/terminal_webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <!-- Floating toolbar -->
+            <HorizontalScrollView
+                android:id="@+id/floating_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:background="@color/ios_secondary_background"
+                android:elevation="4dp"
+                android:paddingVertical="4dp"
+                android:scrollbars="none"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="8dp">
+
+                    <ImageButton
+                        android:id="@+id/btn_undo"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="撤销"
+                        android:src="@android:drawable/ic_menu_revert"
+                        android:tint="@color/ios_label" />
+
+                    <ImageButton
+                        android:id="@+id/btn_redo"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="重做"
+                        android:src="@android:drawable/ic_menu_rotate"
+                        android:tint="@color/ios_label" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="24dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:background="@color/ios_separator" />
+
+                    <ImageButton
+                        android:id="@+id/btn_find"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="查找"
+                        android:src="@android:drawable/ic_menu_search"
+                        android:tint="@color/ios_label" />
+
+                    <ImageButton
+                        android:id="@+id/btn_go_to_line"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="跳转"
+                        android:src="@android:drawable/ic_menu_directions"
+                        android:tint="@color/ios_label" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="24dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:background="@color/ios_separator" />
+
+                    <ImageButton
+                        android:id="@+id/btn_duplicate_line"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="复制行"
+                        android:src="@android:drawable/ic_menu_add"
+                        android:tint="@color/ios_label" />
+
+                    <ImageButton
+                        android:id="@+id/btn_delete_line"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="删除行"
+                        android:src="@android:drawable/ic_menu_delete"
+                        android:tint="@color/ios_system_red" />
+
+                    <ImageButton
+                        android:id="@+id/btn_move_up"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="上移"
+                        android:src="@android:drawable/arrow_up_float"
+                        android:tint="@color/ios_label" />
+
+                    <ImageButton
+                        android:id="@+id/btn_move_down"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="下移"
+                        android:src="@android:drawable/arrow_down_float"
+                        android:tint="@color/ios_label" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="24dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:background="@color/ios_separator" />
+
+                    <ImageButton
+                        android:id="@+id/btn_format"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="格式化"
+                        android:src="@android:drawable/ic_menu_sort_by_size"
+                        android:tint="@color/ios_label" />
+
+                    <ImageButton
+                        android:id="@+id/btn_comment"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="注释"
+                        android:src="@android:drawable/ic_menu_edit"
+                        android:tint="@color/ios_label" />
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!-- Bottom toolbar -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/ios_secondary_background"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp">
+
+        <ImageButton
+            android:id="@+id/btn_file_tree"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="文件树"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            android:tint="@color/ios_system_blue" />
+
+        <ImageButton
+            android:id="@+id/btn_run"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="运行"
+            android:src="@android:drawable/ic_media_play"
+            android:tint="@color/ios_system_green" />
+
+        <ImageButton
+            android:id="@+id/btn_stop"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="停止"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:tint="@color/ios_system_red"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/txt_file_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:text="未打开文件"
+            android:textColor="@color/ios_tertiary_label"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btn_layout"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="切换布局"
+            android:src="@android:drawable/ic_menu_crop"
+            android:tint="@color/ios_system_blue" />
+
+        <TextView
+            android:id="@+id/txt_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="远程"
+            android:textColor="@color/ios_system_green"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btn_mode"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="切换执行模式"
+            android:src="@android:drawable/ic_menu_rotate"
+            android:tint="@color/ios_system_blue" />
+
+    </LinearLayout>
+
+</LinearLayout>
