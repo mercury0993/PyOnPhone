@@ -175,12 +175,13 @@ public class ApiClient {
         });
     }
 
-    public void saveFile(String projectId, String path, String content, Callback<Void> callback) {
+    public void saveFile(String projectId, String path, String content, boolean autoCommit, Callback<Void> callback) {
         executor.execute(() -> {
             try {
                 JSONObject body = new JSONObject();
                 body.put("path", path);
                 body.put("content", content);
+                body.put("auto_commit", autoCommit);
                 post("/projects/" + projectId + "/files", body.toString());
 
                 // Invalidate cache for this file and tree

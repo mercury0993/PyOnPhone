@@ -683,7 +683,10 @@ public class EditorFragment extends Fragment {
 
     private void saveFile(String content) {
         if (currentFilePath == null || projectId == null) return;
-        ApiClient.getInstance().saveFile(projectId, currentFilePath, content, new ApiClient.Callback<Void>() {
+        android.content.SharedPreferences prefs = requireContext()
+                .getSharedPreferences("pyonphone", android.content.Context.MODE_PRIVATE);
+        boolean autoCommit = prefs.getBoolean("auto_commit_enabled", true);
+        ApiClient.getInstance().saveFile(projectId, currentFilePath, content, autoCommit, new ApiClient.Callback<Void>() {
             @Override
             public void onSuccess(Void result) {
                 dirty = false;
