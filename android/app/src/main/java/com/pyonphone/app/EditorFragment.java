@@ -54,6 +54,7 @@ public class EditorFragment extends Fragment {
     private boolean terminalReady = false;
     private boolean dirty = false;
     private boolean running = false;
+    private boolean syncing = false;
     private boolean localMode = false; // false=remote, true=local
 
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -830,7 +831,9 @@ public class EditorFragment extends Fragment {
     }
 
     private void syncProject() {
-        if (projectId == null) return;
+        if (projectId == null || syncing) return;
+        syncing = true;
+        btnSync.setEnabled(false);
 
         Toast.makeText(requireContext(), "同步中...", Toast.LENGTH_SHORT).show();
 
@@ -845,20 +848,30 @@ public class EditorFragment extends Fragment {
                             @Override
                             public void onSuccess(String msg) {
                                 handler.post(() -> {
+                                    syncing = false;
+                                    btnSync.setEnabled(true);
                                     Toast.makeText(requireContext(), "同步完成", Toast.LENGTH_SHORT).show();
                                 });
                             }
 
                             @Override
                             public void onError(String error) {
-                                handler.post(() -> Toast.makeText(requireContext(), "推送失败: " + error, Toast.LENGTH_SHORT).show());
+                                handler.post(() -> {
+                                    syncing = false;
+                                    btnSync.setEnabled(true);
+                                    Toast.makeText(requireContext(), "推送失败: " + error, Toast.LENGTH_SHORT).show();
+                                });
                             }
                         });
                     }
 
                     @Override
                     public void onError(String error) {
-                        handler.post(() -> Toast.makeText(requireContext(), "提交失败: " + error, Toast.LENGTH_SHORT).show());
+                        handler.post(() -> {
+                            syncing = false;
+                            btnSync.setEnabled(true);
+                            Toast.makeText(requireContext(), "提交失败: " + error, Toast.LENGTH_SHORT).show();
+                        });
                     }
                 });
             } else {
@@ -870,20 +883,30 @@ public class EditorFragment extends Fragment {
                             @Override
                             public void onSuccess(JSONObject res) {
                                 handler.post(() -> {
+                                    syncing = false;
+                                    btnSync.setEnabled(true);
                                     Toast.makeText(requireContext(), "同步完成", Toast.LENGTH_SHORT).show();
                                 });
                             }
 
                             @Override
                             public void onError(String error) {
-                                handler.post(() -> Toast.makeText(requireContext(), "推送失败: " + error, Toast.LENGTH_SHORT).show());
+                                handler.post(() -> {
+                                    syncing = false;
+                                    btnSync.setEnabled(true);
+                                    Toast.makeText(requireContext(), "推送失败: " + error, Toast.LENGTH_SHORT).show();
+                                });
                             }
                         });
                     }
 
                     @Override
                     public void onError(String error) {
-                        handler.post(() -> Toast.makeText(requireContext(), "提交失败: " + error, Toast.LENGTH_SHORT).show());
+                        handler.post(() -> {
+                            syncing = false;
+                            btnSync.setEnabled(true);
+                            Toast.makeText(requireContext(), "提交失败: " + error, Toast.LENGTH_SHORT).show();
+                        });
                     }
                 });
             }
@@ -895,9 +918,27 @@ public class EditorFragment extends Fragment {
                 if (value != null && !value.equals("null")) {
                     String content = value.substring(1, value.length() - 1)
                             .replace("\\n", "\n").replace("\\\"", "\"");
-                    saveFile(content);
+                    // Save first, then sync after save completes
+                    android.content.SharedPreferences prefs2 = requireContext()
+                            .getSharedPreferences("pyonphone", android.content.Context.MODE_PRIVATE);
+                    boolean autoCommit = prefs2.getBoolean("auto_commit_enabled", true);
+                    ApiClient.getInstance().saveFile(projectId, currentFilePath, content, autoCommit, new ApiClient.Callback<Void>() {
+                        @Override
+                        public void onSuccess(Void result) {
+                            dirty = false;
+                            doSync.run();
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            Toast.makeText(requireContext(), "保存失败，无法同步", Toast.LENGTH_SHORT).show();
+                            syncing = false;
+                            btnSync.setEnabled(true);
+                        }
+                    });
+                } else {
+                    doSync.run();
                 }
-                doSync.run();
             });
         } else {
             doSync.run();
