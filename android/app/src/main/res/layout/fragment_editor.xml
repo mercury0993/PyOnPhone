@@ -265,6 +265,16 @@
             android:textColor="@color/ios_tertiary_label"
             android:textSize="12sp" />
 
+        <TextView
+            android:id="@+id/txt_sync_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="未同步"
+            android:textColor="@color/ios_system_orange"
+            android:textSize="12sp"
+            android:visibility="gone"
+            android:paddingStart="8dp" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"

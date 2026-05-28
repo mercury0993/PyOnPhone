@@ -46,7 +46,8 @@ public class EditorFragment extends Fragment {
     private ImageButton btnDuplicateLine, btnDeleteLine, btnMoveUp, btnMoveDown;
     private ImageButton btnFormat, btnComment;
     private View floatingToolbar;
-    private TextView txtFilePath, txtMode;
+    private TextView txtFilePath, txtMode, txtSyncStatus;
+    private boolean syncFailed = false;
 
     private String projectId;
     private String currentFilePath;
@@ -103,6 +104,7 @@ public class EditorFragment extends Fragment {
         btnSync = view.findViewById(R.id.btn_sync);
         txtFilePath = view.findViewById(R.id.txt_file_path);
         txtMode = view.findViewById(R.id.txt_mode);
+        txtSyncStatus = view.findViewById(R.id.txt_sync_status);
 
         // Floating toolbar
         floatingToolbar = view.findViewById(R.id.floating_toolbar);
@@ -702,11 +704,18 @@ public class EditorFragment extends Fragment {
             @Override
             public void onSuccess(Void result) {
                 dirty = false;
+                syncFailed = false;
+                if (txtSyncStatus != null) {
+                    txtSyncStatus.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onError(String error) {
-                // silent for auto-save
+                syncFailed = true;
+                if (txtSyncStatus != null) {
+                    txtSyncStatus.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
