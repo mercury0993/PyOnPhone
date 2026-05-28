@@ -42,6 +42,7 @@ public class PythonExecutor {
     private AtomicBoolean running = new AtomicBoolean(false);
     private AtomicLong lastMemoryCheck = new AtomicLong(0);
     private Future<?> currentTask;
+    private Runnable timeoutWatchdog;
     private StatusCallback statusCallback;
 
     private PythonExecutor(Context context) {
@@ -188,10 +189,12 @@ public class PythonExecutor {
                     callback.onExit(1);
                 });
             } finally {
+                mainHandler.removeCallbacks(timeoutWatchdog);
                 running.set(false);
                 checkMemoryUsage();
             }
         });
+        scheduleTimeoutWatchdog(callback);
     }
 
     public void executeCode(String code, String projectDir, OutputCallback callback) {
@@ -278,10 +281,27 @@ public class PythonExecutor {
                     callback.onExit(1);
                 });
             } finally {
+                mainHandler.removeCallbacks(timeoutWatchdog);
                 running.set(false);
                 checkMemoryUsage();
             }
         });
+        scheduleTimeoutWatchdog(callback);
+    }
+
+    private void scheduleTimeoutWatchdog(OutputCallback callback) {
+        timeoutWatchdog = () -> {
+            if (running.get() && currentTask != null && !currentTask.isDone()) {
+                Log.w(TAG, "Execution timed out after " + EXECUTION_TIMEOUT_MS + "ms");
+                currentTask.cancel(true);
+                running.set(false);
+                mainHandler.post(() -> {
+                    callback.onStderr("执行超时（" + (EXECUTION_TIMEOUT_MS / 1000) + "秒）\n");
+                    callback.onExit(124); // 124 = timeout exit code
+                });
+            }
+        };
+        mainHandler.postDelayed(timeoutWatchdog, EXECUTION_TIMEOUT_MS);
     }
 
     private void checkMemoryUsage() {
