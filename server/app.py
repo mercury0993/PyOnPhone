@@ -284,7 +284,17 @@ def handle_run(data):
         cwd=str(pdir),
     )
 
-    _running_procs[(project_id, sid)] = proc
+    # Timeout timer (30 seconds)
+    def on_timeout():
+        if proc.poll() is None:
+            proc.kill()
+            _running_procs.pop((project_id, sid), None)
+            socketio.emit("timeout", {"message": "执行超时（30秒）"}, to=sid)
+
+    timer = threading.Timer(30, on_timeout)
+    timer.start()
+
+    _running_procs[(project_id, sid)] = (proc, timer)
 
     def stream_output(pipe, event_name):
         try:
@@ -302,6 +312,7 @@ def handle_run(data):
         t_out.join()
         t_err.join()
         proc.wait()
+        timer.cancel()
         _running_procs.pop((project_id, sid), None)
         socketio.emit("exit", {"code": proc.returncode}, to=sid)
 
@@ -315,7 +326,8 @@ def handle_stdin(data):
     sid = sio_request.sid
 
     project_id = data.get("project_id", "")
-    proc = _running_procs.get((project_id, sid))
+    entry = _running_procs.get((project_id, sid))
+    proc = entry[0] if entry else None
     if proc and proc.stdin and proc.poll() is None:
         try:
             proc.stdin.write(data.get("data", "").encode("utf-8"))
@@ -331,9 +343,12 @@ def handle_stop(data):
     sid = sio_request.sid
 
     project_id = data.get("project_id", "")
-    proc = _running_procs.pop((project_id, sid), None)
-    if proc and proc.poll() is None:
-        proc.kill()
+    entry = _running_procs.pop((project_id, sid), None)
+    if entry:
+        proc, timer = entry
+        timer.cancel()
+        if proc and proc.poll() is None:
+            proc.kill()
 
 
 # ── Git operations ──────────────────────────────────────────────────
