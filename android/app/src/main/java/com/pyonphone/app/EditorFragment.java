@@ -1002,6 +1002,12 @@ public class EditorFragment extends Fragment {
             case "stderr":
                 appendTerminal(data);
                 break;
+            case "timeout":
+                appendTerminal("\r\n[31m⚠ 执行超时（30秒）[0m\r\n");
+                running = false;
+                btnRun.setVisibility(View.VISIBLE);
+                btnStop.setVisibility(View.GONE);
+                break;
             case "exit":
                 appendTerminal("\r\n[33m[退出码: " + data + "][0m\r\n");
                 running = false;
