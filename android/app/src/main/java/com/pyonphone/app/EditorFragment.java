@@ -127,6 +127,15 @@ public class EditorFragment extends Fragment {
         setupContextMenu();
         setupDividerDrag();
 
+        // Load execution mode from settings
+        android.content.SharedPreferences prefs = requireContext()
+                .getSharedPreferences("pyonphone", android.content.Context.MODE_PRIVATE);
+        localMode = prefs.getBoolean("local_python_enabled", false);
+        updateModeIndicator();
+        if (!localMode) {
+            btnMode.setVisibility(View.GONE);
+        }
+
         if (projectId != null && !projectId.isEmpty()) {
             loadFileTree();
         }
