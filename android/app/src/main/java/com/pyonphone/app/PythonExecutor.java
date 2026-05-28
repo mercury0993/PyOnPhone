@@ -167,7 +167,9 @@ public class PythonExecutor {
                 }
 
                 final int code2 = exitCode;
-                mainHandler.post(() -> callback.onExit(code2));
+                if (running.get()) {
+                    mainHandler.post(() -> callback.onExit(code2));
+                }
 
                 // Log performance
                 long duration = System.currentTimeMillis() - startTime;
@@ -184,10 +186,12 @@ public class PythonExecutor {
             } catch (Exception e) {
                 final String error = e.getMessage();
                 Log.e(TAG, "Execution error", e);
-                mainHandler.post(() -> {
-                    callback.onStderr("执行错误: " + error + "\n");
-                    callback.onExit(1);
-                });
+                if (running.get()) {
+                    mainHandler.post(() -> {
+                        callback.onStderr("执行错误: " + error + "\n");
+                        callback.onExit(1);
+                    });
+                }
             } finally {
                 mainHandler.removeCallbacks(timeoutWatchdog);
                 running.set(false);
@@ -262,7 +266,9 @@ public class PythonExecutor {
                 }
 
                 final int code2 = exitCode;
-                mainHandler.post(() -> callback.onExit(code2));
+                if (running.get()) {
+                    mainHandler.post(() -> callback.onExit(code2));
+                }
 
                 // Log performance
                 long duration = System.currentTimeMillis() - startTime;
@@ -276,10 +282,12 @@ public class PythonExecutor {
             } catch (Exception e) {
                 final String error = e.getMessage();
                 Log.e(TAG, "Execution error", e);
-                mainHandler.post(() -> {
-                    callback.onStderr("执行错误: " + error + "\n");
-                    callback.onExit(1);
-                });
+                if (running.get()) {
+                    mainHandler.post(() -> {
+                        callback.onStderr("执行错误: " + error + "\n");
+                        callback.onExit(1);
+                    });
+                }
             } finally {
                 mainHandler.removeCallbacks(timeoutWatchdog);
                 running.set(false);
