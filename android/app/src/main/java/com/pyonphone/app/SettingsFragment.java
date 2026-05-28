@@ -46,6 +46,8 @@ public class SettingsFragment extends Fragment {
         SwitchMaterial switchDark = view.findViewById(R.id.switch_dark_theme);
         SeekBar seekFontSize = view.findViewById(R.id.seek_font_size);
         TextView txtFontSize = view.findViewById(R.id.txt_font_size);
+        SwitchMaterial switchLocalPython = view.findViewById(R.id.switch_local_python);
+        SwitchMaterial switchAutoCommit = view.findViewById(R.id.switch_auto_commit);
 
         // SSH key views
         MaterialButton btnGenerateKey = view.findViewById(R.id.btn_generate_key);
@@ -103,6 +105,20 @@ public class SettingsFragment extends Fragment {
                 int size = seekBar.getProgress() + 10;
                 prefs.edit().putInt("font_size", size).apply();
             }
+        });
+
+        // Local Python toggle
+        boolean localPython = prefs.getBoolean("local_python_enabled", false);
+        switchLocalPython.setChecked(localPython);
+        switchLocalPython.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean("local_python_enabled", isChecked).apply();
+        });
+
+        // Auto commit toggle
+        boolean autoCommit = prefs.getBoolean("auto_commit_enabled", true);
+        switchAutoCommit.setChecked(autoCommit);
+        switchAutoCommit.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean("auto_commit_enabled", isChecked).apply();
         });
 
         // SSH key management
