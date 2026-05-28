@@ -313,8 +313,9 @@ def handle_run(data):
         t_err.join()
         proc.wait()
         timer.cancel()
-        _running_procs.pop((project_id, sid), None)
-        socketio.emit("exit", {"code": proc.returncode}, to=sid)
+        removed = _running_procs.pop((project_id, sid), None)
+        if removed is not None:
+            socketio.emit("exit", {"code": proc.returncode}, to=sid)
 
     threading.Thread(target=wait_and_report, daemon=True).start()
 
