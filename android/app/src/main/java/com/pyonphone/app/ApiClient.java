@@ -182,7 +182,7 @@ public class ApiClient {
                 body.put("path", path);
                 body.put("content", content);
                 body.put("auto_commit", autoCommit);
-                post("/projects/" + projectId + "/files", body.toString());
+                put("/projects/" + projectId + "/files", body.toString());
 
                 // Invalidate cache for this file and tree
                 fileCache.remove("file_" + projectId + "_" + path);
@@ -289,6 +289,19 @@ public class ApiClient {
     private String post(String path, String body) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) new URL(baseUrl + path).openConnection();
         conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setConnectTimeout(5000);
+        conn.setReadTimeout(15000);
+        conn.setDoOutput(true);
+        try (OutputStream os = conn.getOutputStream()) {
+            os.write(body.getBytes(StandardCharsets.UTF_8));
+        }
+        return readResponse(conn);
+    }
+
+    private String put(String path, String body) throws IOException {
+        HttpURLConnection conn = (HttpURLConnection) new URL(baseUrl + path).openConnection();
+        conn.setRequestMethod("PUT");
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setConnectTimeout(5000);
         conn.setReadTimeout(15000);
