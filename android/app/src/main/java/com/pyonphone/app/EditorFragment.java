@@ -47,7 +47,6 @@ public class EditorFragment extends Fragment {
     private ImageButton btnFormat, btnComment;
     private View floatingToolbar;
     private TextView txtFilePath, txtMode, txtSyncStatus;
-    private boolean syncFailed = false;
 
     private String projectId;
     private String currentFilePath;
@@ -704,7 +703,6 @@ public class EditorFragment extends Fragment {
             @Override
             public void onSuccess(Void result) {
                 dirty = false;
-                syncFailed = false;
                 if (txtSyncStatus != null) {
                     txtSyncStatus.setVisibility(View.GONE);
                 }
@@ -712,7 +710,6 @@ public class EditorFragment extends Fragment {
 
             @Override
             public void onError(String error) {
-                syncFailed = true;
                 if (txtSyncStatus != null) {
                     txtSyncStatus.setVisibility(View.VISIBLE);
                 }

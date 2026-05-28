@@ -9,4 +9,5 @@
     <string name="editor_placeholder">编辑器</string>
     <string name="git_placeholder">Git 管理</string>
     <string name="settings_placeholder">设置</string>
+    <string name="sync_status_unsynced">未同步</string>
 </resources>
