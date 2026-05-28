@@ -95,17 +95,42 @@ PyOnPhone/
 | GET | /projects/{id}/git/log | 提交历史 |
 | GET | /projects/{id}/git/status | 文件变更 |
 
-WebSocket 事件：`run`（执行）、`stdout`/`stderr`（输出）、`stdin`（输入）、`stop`（终止）、`exit`（退出码）
+WebSocket 事件：`run`（执行）、`stdout`/`stderr`（输出）、`stdin`（输入）、`stop`（终止）、`exit`（退出码）、`timeout`（执行超时）
 
-## 下一步
+## 待完成（设计文档 vs 实际代码差异）
 
-可选方向：
-1. **真机测试**：在真实 Android 设备上测试完整功能
-2. **Git 认证优化**：支持 HTTPS Token 认证、SSH 密钥自动加载
-3. **更多手势操作**：双指缩放、滑动选择等
+| 优先级 | 功能 | 状态 |
+|--------|------|------|
+| 高 | 分屏拖拽分割线 | 已实现 |
+| 高 | 服务端执行超时 | 已完成 |
+| 高 | 自动保存失败显示"未同步"状态 | 已完成 |
+| 高 | 请求超时显示重试按钮 | 已完成 |
+| 高 | 编辑器底部加 Git 同步按钮 | 已完成 |
+| 高 | 设置页加本地 Python 开关 + 自动 commit 开关 | 已完成 |
+| 中 | Python 错误提示（波浪线） | 未做 |
+| 中 | Git Push 冲突处理 | 未做 |
+| 低 | Python LSP 自动补全 | 未做 |
+| 低 | 本地 stdin 交互 | 未做 |
 
-服务器启动命令：`cd server && python app.py`（端口 5000）
+## 待办
 
-已知遗留：
+- [x] 推送代码到 GitHub（https://github.com/mercury0993/PyOnPhone）
+- [ ] 部署服务器到租用的 VPS
+- [ ] 服务器加 API Key 认证（开放给他人前必须做）
+
+## 已知遗留
+
 - debug 模式下 use_reloader=False
 - async_mode 用的 threading（gevent 有依赖问题）
+- Monaco Editor 键盘输入需 `windowSoftInputMode="adjustResize"` + WebView focus 处理
+- 真机测试：服务器地址默认 `10.0.2.2`（仅模拟器有效），真机需手动改设置页
+
+## 本次修复的编译错误
+
+- JGit: `PushResult` import 路径改为 `org.eclipse.jgit.transport`
+- JGit: `Config` 改为 `StoredConfig`
+- Chaquopy: `sys.set()` 改为 `sys.put()`，`mainModule.getDict()` 改为传 `mainModule`
+- 编辑器: 缺少 `AlertDialog`、`TextInputEditText` import，缺少 `toggleComment()` 方法
+- 替换对话框三元运算符语法错误（`:` → `?`）
+- 布局: `searchHintTextColor` 属性不存在，已移除
+- Gradle: JGit JAR 重复文件冲突，加 `pickFirst`
