@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -647,13 +648,12 @@ public class EditorFragment extends Fragment {
     }
 
     private boolean isTimeoutError(String error) {
-        return error != null && (error.contains("SocketTimeoutException") || error.contains("timed out"));
+        return error != null && error.contains("timed out");
     }
 
     private void showRetrySnackbar(String message, Runnable retryAction) {
         if (getView() == null) return;
-        com.google.android.material.snackbar.Snackbar.make(getView(), message,
-                com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
+        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG)
                 .setAction("重试", v -> retryAction.run())
                 .show();
     }
