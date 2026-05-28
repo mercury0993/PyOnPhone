@@ -41,7 +41,7 @@ public class EditorFragment extends Fragment {
     private WebView terminalWebView;
     private RecyclerView fileTreeView;
     private FileTreeAdapter fileTreeAdapter;
-    private ImageButton btnRun, btnStop, btnFileTree, btnLayout, btnMode;
+    private ImageButton btnRun, btnStop, btnFileTree, btnLayout, btnMode, btnSync;
     private ImageButton btnUndo, btnRedo, btnFind, btnGoToLine;
     private ImageButton btnDuplicateLine, btnDeleteLine, btnMoveUp, btnMoveDown;
     private ImageButton btnFormat, btnComment;
@@ -99,6 +99,7 @@ public class EditorFragment extends Fragment {
         btnFileTree = view.findViewById(R.id.btn_file_tree);
         btnLayout = view.findViewById(R.id.btn_layout);
         btnMode = view.findViewById(R.id.btn_mode);
+        btnSync = view.findViewById(R.id.btn_sync);
         txtFilePath = view.findViewById(R.id.txt_file_path);
         txtMode = view.findViewById(R.id.txt_mode);
 
@@ -194,6 +195,7 @@ public class EditorFragment extends Fragment {
         btnStop.setOnClickListener(v -> stopScript());
         btnLayout.setOnClickListener(v -> cycleLayoutMode());
         btnMode.setOnClickListener(v -> toggleExecutionMode());
+        btnSync.setOnClickListener(v -> syncProject());
 
         // Initialize PythonExecutor for local mode
         pythonExecutor = PythonExecutor.getInstance(requireContext());
@@ -825,6 +827,81 @@ public class EditorFragment extends Fragment {
                 });
             }
         });
+    }
+
+    private void syncProject() {
+        if (projectId == null) return;
+
+        Toast.makeText(requireContext(), "同步中...", Toast.LENGTH_SHORT).show();
+
+        Runnable doSync = () -> {
+            if (localMode) {
+                // Local mode: commit + push via GitExecutor
+                GitExecutor gitExecutor = GitExecutor.getInstance(requireContext());
+                gitExecutor.commit(projectId, "sync: auto commit", new GitExecutor.GitCallback<String>() {
+                    @Override
+                    public void onSuccess(String message) {
+                        gitExecutor.push(projectId, new GitExecutor.GitCallback<String>() {
+                            @Override
+                            public void onSuccess(String msg) {
+                                handler.post(() -> {
+                                    Toast.makeText(requireContext(), "同步完成", Toast.LENGTH_SHORT).show();
+                                });
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                handler.post(() -> Toast.makeText(requireContext(), "推送失败: " + error, Toast.LENGTH_SHORT).show());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        handler.post(() -> Toast.makeText(requireContext(), "提交失败: " + error, Toast.LENGTH_SHORT).show());
+                    }
+                });
+            } else {
+                // Remote mode: commit + push via API
+                ApiClient.getInstance().gitCommit(projectId, "sync: auto commit", new ApiClient.Callback<JSONObject>() {
+                    @Override
+                    public void onSuccess(JSONObject result) {
+                        ApiClient.getInstance().gitPush(projectId, new ApiClient.Callback<JSONObject>() {
+                            @Override
+                            public void onSuccess(JSONObject res) {
+                                handler.post(() -> {
+                                    Toast.makeText(requireContext(), "同步完成", Toast.LENGTH_SHORT).show();
+                                });
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                handler.post(() -> Toast.makeText(requireContext(), "推送失败: " + error, Toast.LENGTH_SHORT).show());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        handler.post(() -> Toast.makeText(requireContext(), "提交失败: " + error, Toast.LENGTH_SHORT).show());
+                    }
+                });
+            }
+        };
+
+        // Save current file first if dirty
+        if (dirty && currentFilePath != null) {
+            editorWebView.evaluateJavascript("getContent()", value -> {
+                if (value != null && !value.equals("null")) {
+                    String content = value.substring(1, value.length() - 1)
+                            .replace("\\n", "\n").replace("\\\"", "\"");
+                    saveFile(content);
+                }
+                doSync.run();
+            });
+        } else {
+            doSync.run();
+        }
     }
 
     private void stopScript() {
