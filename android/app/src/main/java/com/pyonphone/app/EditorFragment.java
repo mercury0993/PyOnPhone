@@ -560,7 +560,11 @@ public class EditorFragment extends Fragment {
 
             @Override
             public void onError(String error) {
-                Toast.makeText(requireContext(), "加载文件树失败: " + error, Toast.LENGTH_SHORT).show();
+                if (isTimeoutError(error)) {
+                    showRetrySnackbar("加载文件树超时", () -> loadFileTree());
+                } else {
+                    Toast.makeText(requireContext(), "加载文件树失败: " + error, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -633,9 +637,25 @@ public class EditorFragment extends Fragment {
 
             @Override
             public void onError(String error) {
-                Toast.makeText(requireContext(), "打开文件失败: " + error, Toast.LENGTH_SHORT).show();
+                if (isTimeoutError(error)) {
+                    showRetrySnackbar("打开文件超时", () -> openFile(path));
+                } else {
+                    Toast.makeText(requireContext(), "打开文件失败: " + error, Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    private boolean isTimeoutError(String error) {
+        return error != null && (error.contains("SocketTimeoutException") || error.contains("timed out"));
+    }
+
+    private void showRetrySnackbar(String message, Runnable retryAction) {
+        if (getView() == null) return;
+        com.google.android.material.snackbar.Snackbar.make(getView(), message,
+                com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
+                .setAction("重试", v -> retryAction.run())
+                .show();
     }
 
     private String detectLanguage(String path) {
