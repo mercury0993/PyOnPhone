@@ -10,6 +10,10 @@
 -keep class org.eclipse.jgit.** { *; }
 -dontwarn org.eclipse.jgit.**
 
+# Keep SLF4J classes used by JGit
+-keep class org.slf4j.** { *; }
+-dontwarn org.slf4j.**
+
 # Keep Apache SSH classes used by JGit
 -keep class org.apache.sshd.** { *; }
 -dontwarn org.apache.sshd.**
